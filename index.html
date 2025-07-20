@@ -34,7 +34,6 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            opacity: 0.7;
         }
 
         .section-title {
@@ -83,8 +82,8 @@
             background-color: #e5e7eb; /* Gray-200 */
         }
         
-        #hero-gradient {
-            background: radial-gradient(ellipse at top, #dbe9f7, var(--bg-primary) 70%);
+        #hero-section {
+            background: radial-gradient(ellipse at center, var(--bg-accent-medium), var(--bg-accent-dark));
         }
 
     </style>
@@ -121,22 +120,22 @@
     <main class="container mx-auto px-6">
 
         <!-- Hero Section -->
-        <section id="home" class="text-center py-24 md:py-32 relative overflow-hidden" id="hero-gradient">
+        <section id="hero-section" class="text-center py-24 md:py-32 relative overflow-hidden">
             <canvas id="hero-canvas"></canvas>
             <div class="relative z-10">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-[var(--text-primary)] mb-4" data-aos="fade-down">Sahil Jaglan</h1>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4" data-aos="fade-down">Sahil Jaglan</h1>
                 <p class="text-2xl text-[var(--accent-color)] font-semibold mb-6" data-aos="fade-down" data-aos-delay="200">Senior Software Engineer</p>
-                <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-8" data-aos="fade-up" data-aos-delay="400">
+                <p class="max-w-3xl mx-auto text-lg text-slate-200 mb-8" data-aos="fade-up" data-aos-delay="400">
                     A dedicated and skilled Senior Front-End Developer with professional experience in the software development industry. Passionate about leading teams, deploying robust applications, and contributing to innovative web solutions.
                 </p>
                 <div class="flex justify-center items-center space-x-4" data-aos="fade-up" data-aos-delay="600">
                     <a href="mailto:Jaglan89010@gmail.com" class="inline-flex items-center gap-2 bg-[var(--accent-color)] text-white px-6 py-3 rounded-full hover:bg-[var(--accent-hover)] transition-transform transform hover:scale-105 shadow-lg hover:shadow-blue-400/50">
                         <i data-lucide="mail"></i> Get in Touch
                     </a>
-                    <a href="https://www.linkedin.com/in/sjstar/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-700 hover:text-[var(--accent-color)] transition-colors">
+                    <a href="https://www.linkedin.com/in/sjstar/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
                         <i data-lucide="linkedin"></i>
                     </a>
-                     <a href="https://github.com/sjstar" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-700 hover:text-[var(--accent-color)] transition-colors">
+                     <a href="https://github.com/sjstar" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
                         <i data-lucide="github"></i>
                     </a>
                 </div>
@@ -217,8 +216,8 @@
         </section>
 
         <!-- Projects Section -->
-        <section id="projects" class="py-24 bg-[var(--bg-accent-dark)] text-white rounded-2xl" style="padding: 20px;">
-            <h2 class="section-title text-white" data-aos="fade-up" style="padding: 15px; font-size: 20px;">My Projects</h2>
+        <section id="projects" class="py-24 bg-[var(--bg-accent-dark)] text-white rounded-2xl" style="padding: 15px; padding-bottom: 30px;">
+            <h2 class="section-title text-white" data-aos="fade-up" style="padding: 15px; ">My Projects</h2>
             <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
                 <div class="bg-slate-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:bg-slate-700 hover:-translate-y-1" data-aos="fade-up-right">
                     <i data-lucide="swords" class="text-[var(--accent-color)] w-12 h-12 mb-4"></i>
@@ -325,47 +324,41 @@
             });
         });
 
-        // Three.js 3D Background Animation
-        let scene, camera, renderer, particles;
+        // --- High-Level 3D Starfield Animation ---
+        let scene, camera, renderer, stars;
         const canvas = document.getElementById('hero-canvas');
 
         function init3D() {
-            // Scene
             scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 1;
 
-            // Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            // Renderer
             renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+            const starGeo = new THREE.BufferGeometry();
+            const starCount = 10000;
+            const posArray = new Float32Array(starCount * 3);
 
-            // Particles
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 5000;
-            const posArray = new Float32Array(particlesCount * 3);
-
-            for (let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 10;
+            for(let i=0; i < starCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 1000;
             }
 
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            starGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.008,
-                color: 0x88BDF2
+            const starMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.7,
+                transparent: true
             });
 
-            particles = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particles);
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
 
             animate();
         }
 
-        // Mouse move listener
         let mouseX = 0;
         let mouseY = 0;
         document.addEventListener('mousemove', (event) => {
@@ -378,17 +371,19 @@
         function animate() {
             const elapsedTime = clock.getElapsedTime();
 
-            // Update particles
-            particles.rotation.y = -0.1 * elapsedTime;
-
+            // Animate stars
+            stars.rotation.y = elapsedTime * 0.02;
+            stars.rotation.x = elapsedTime * 0.02;
+            
             // Parallax effect
             const parallaxX = (mouseX / window.innerWidth - 0.5) * 2;
             const parallaxY = -(mouseY / window.innerHeight - 0.5) * 2;
             camera.position.x += (parallaxX - camera.position.x) * 0.02;
             camera.position.y += (parallaxY - camera.position.y) * 0.02;
-            
+            camera.lookAt(scene.position);
+
             renderer.render(scene, camera);
-            window.requestAnimationFrame(animate);
+            requestAnimationFrame(animate);
         }
 
         function onWindowResize() {
