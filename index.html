@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahil Jaglan - Senior Software Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #f0f4f8; /* Custom light blue-gray */
+            --bg-secondary: #ffffff;
+            --bg-accent-dark: #384959;
+            --bg-accent-medium: #6A89A7;
+            --accent-color: #88BDF2;
+            --accent-hover: #6A89A7;
+            --text-primary: #384959;
+            --text-secondary: #6A89A7;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+
+        .section-title {
+            @apply text-4xl font-extrabold text-[var(--text-primary)] mb-12 text-center;
+        }
+        
+        .card {
+            @apply bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 hover:-translate-y-2;
+        }
+
+        .skill-tag {
+            @apply bg-[#BDDDFC] text-[var(--text-primary)] text-sm font-semibold px-4 py-2 rounded-full flex items-center gap-2 transition-all duration-300 hover:bg-[#a8d2fa] hover:shadow-lg hover:shadow-blue-200/50;
+        }
+
+        .nav-link {
+            @apply relative text-slate-600 font-medium after:content-[''] after:absolute after:w-0 after:h-0.5 after:block after:bg-[var(--accent-color)] after:transition-all after:duration-300 after:ease-in-out hover:text-[var(--accent-color)] hover:after:w-full;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid var(--accent-color);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover::before {
+            transform: scale(1.2);
+            background-color: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .timeline-path::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e5e7eb; /* Gray-200 */
+        }
+        
+        #hero-gradient {
+            background: radial-gradient(ellipse at top, #dbe9f7, var(--bg-primary) 70%);
+        }
+
+    </style>
+</head>
+<body class="bg-[var(--bg-primary)] text-[var(--text-secondary)]">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-[var(--text-primary)]">Sahil Jaglan</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#education" class="nav-link">Education</a>
+                <a href="#contact" class="bg-[var(--accent-color)] text-white px-5 py-2 rounded-full font-semibold hover:bg-[var(--accent-hover)] transition-all duration-300 shadow-lg hover:shadow-blue-300/50 transform hover:-translate-y-0.5">Contact</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-700">
+                <i data-lucide="menu"></i>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#about" class="block py-2 text-slate-600 hover:text-[var(--accent-color)]">About</a>
+            <a href="#skills" class="block py-2 text-slate-600 hover:text-[var(--accent-color)]">Skills</a>
+            <a href="#experience" class="block py-2 text-slate-600 hover:text-[var(--accent-color)]">Experience</a>
+            <a href="#projects" class="block py-2 text-slate-600 hover:text-[var(--accent-color)]">Projects</a>
+            <a href="#education" class="block py-2 text-slate-600 hover:text-[var(--accent-color)]">Education</a>
+            <a href="#contact" class="block mt-2 bg-[var(--accent-color)] text-white px-4 py-2 rounded-full hover:bg-[var(--accent-hover)] text-center">Contact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6">
+
+        <!-- Hero Section -->
+        <section id="home" class="text-center py-24 md:py-32 relative overflow-hidden" id="hero-gradient">
+            <canvas id="hero-canvas"></canvas>
+            <div class="relative z-10">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-[var(--text-primary)] mb-4" data-aos="fade-down">Sahil Jaglan</h1>
+                <p class="text-2xl text-[var(--accent-color)] font-semibold mb-6" data-aos="fade-down" data-aos-delay="200">Senior Software Engineer</p>
+                <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-8" data-aos="fade-up" data-aos-delay="400">
+                    A dedicated and skilled Senior Front-End Developer with professional experience in the software development industry. Passionate about leading teams, deploying robust applications, and contributing to innovative web solutions.
+                </p>
+                <div class="flex justify-center items-center space-x-4" data-aos="fade-up" data-aos-delay="600">
+                    <a href="mailto:Jaglan89010@gmail.com" class="inline-flex items-center gap-2 bg-[var(--accent-color)] text-white px-6 py-3 rounded-full hover:bg-[var(--accent-hover)] transition-transform transform hover:scale-105 shadow-lg hover:shadow-blue-400/50">
+                        <i data-lucide="mail"></i> Get in Touch
+                    </a>
+                    <a href="https://www.linkedin.com/in/sjstar/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-700 hover:text-[var(--accent-color)] transition-colors">
+                        <i data-lucide="linkedin"></i>
+                    </a>
+                     <a href="https://github.com/sjstar" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-slate-700 hover:text-[var(--accent-color)] transition-colors">
+                        <i data-lucide="github"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 relative">
+             <div class="absolute top-0 left-0 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+             <div class="absolute bottom-0 right-0 w-64 h-64 bg-slate-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+             <div class="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-16 rounded-2xl shadow-xl relative" data-aos="fade-up">
+                <div class="text-center">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed">
+                        I am a Senior Front-End Developer with a strong foundation in creating and deploying engaging, user-friendly interfaces. Proficient in HTML, CSS, JavaScript, and TypeScript, with extensive hands-on experience in the Angular framework, I am passionate about leading projects and leveraging my skills to contribute to innovative and impactful web solutions. I thrive in collaborative environments, enjoy mentoring team members, and excel at translating complex design mockups into fully functional, responsive, and deployed web pages.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 bg-slate-100/50 rounded-2xl">
+            <h2 class="section-title" data-aos="fade-up">Technical Skills</h2>
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-4">Programming Languages</h3>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <span class="skill-tag"><i data-lucide="code-2"></i>C++</span>
+                        <span class="skill-tag"><i data-lucide="code-2"></i>JavaScript</span>
+                        <span class="skill-tag"><i data-lucide="code-2"></i>TypeScript</span>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-4">Web Technologies</h3>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <span class="skill-tag"><i data-lucide="file-code"></i>HTML</span>
+                        <span class="skill-tag"><i data-lucide="palette"></i>CSS</span>
+                        <span class="skill-tag"><i data-lucide="atom"></i>Angular</span>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-4">Tools & Platforms</h3>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <span class="skill-tag"><i data-lucide="box"></i>Docker</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section id="experience" class="py-24">
+            <h2 class="section-title" data-aos="fade-up">Work Experience</h2>
+            <div class="max-w-3xl mx-auto relative pl-8">
+                <div class="timeline-path"></div>
+                <!-- Senior Software Engineer Role -->
+                <div class="relative timeline-item mb-12" data-aos="fade-left">
+                    <h3 class="text-2xl font-bold text-[var(--text-primary)]">Senior Software Engineer</h3>
+                    <p class="text-md text-[var(--accent-color)] font-semibold mb-2">Libsys Ltd, Gurgaon | July 2025 - Present</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-2 marker:text-[var(--accent-color)]">
+                        <li>Lead the deployment of front-end projects, ensuring smooth and efficient release cycles.</li>
+                        <li>Architect and implement scalable front-end solutions for dynamic web applications.</li>
+                        <li>Mentor junior developers, providing technical guidance and fostering team growth.</li>
+                        <li>Collaborate with cross-functional teams to define project scope and deliver high-quality features.</li>
+                    </ul>
+                </div>
+                <!-- Software Developer Role -->
+                <div class="relative timeline-item" data-aos="fade-left">
+                    <h3 class="text-2xl font-bold text-[var(--text-primary)]">Software Developer</h3>
+                    <p class="text-md text-[var(--accent-color)] font-semibold mb-2">Libsys Ltd, Gurgaon | July 2022 - June 2025</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-2 marker:text-[var(--accent-color)]">
+                        <li>Developed and maintained dynamic web applications utilizing the Angular framework.</li>
+                        <li>Translated design mockups into fully functional and responsive web pages.</li>
+                        <li>Implemented key front-end features using HTML, CSS, and TypeScript.</li>
+                        <li>Collaborated effectively within cross-functional teams to ensure timely project delivery.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 bg-[var(--bg-accent-dark)] text-white rounded-2xl" style="padding: 20px;">
+            <h2 class="section-title text-white" data-aos="fade-up" style="padding: 15px; font-size: 20px;">My Projects</h2>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+                <div class="bg-slate-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:bg-slate-700 hover:-translate-y-1" data-aos="fade-up-right">
+                    <i data-lucide="swords" class="text-[var(--accent-color)] w-12 h-12 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-white mb-3">Cricket Quiz</h3>
+                    <p class="text-slate-400 mb-6">A fun and interactive quiz application for cricket enthusiasts to test their knowledge.</p>
+                    <a href="https://sjstar.github.io/Cricket-quiz/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 font-semibold text-[var(--accent-color)] hover:text-white transition-colors group">
+                        View Project <i data-lucide="arrow-right" class="transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+                <div class="bg-slate-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:bg-slate-700 hover:-translate-y-1" data-aos="fade-up-left">
+                    <i data-lucide="file-text" class="text-[var(--accent-color)] w-12 h-12 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-white mb-3">AI Resume Maker</h3>
+                    <p class="text-slate-400 mb-6">An intelligent tool that helps users create professional and impactful resumes with the help of AI.</p>
+                    <a href="https://sjstar.github.io/ai-resume-maker/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 font-semibold text-[var(--accent-color)] hover:text-white transition-colors group">
+                        View Project <i data-lucide="arrow-right" class="transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="py-24">
+            <h2 class="section-title" data-aos="fade-up">Education</h2>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+                <div class="card p-6 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-lg font-semibold text-[var(--text-primary)]">Bachelor of Technology (B.Tech)</h3>
+                    <p class="text-[var(--accent-color)]">Guru Gobind Singh Indraprastha University</p>
+                    <p class="text-sm text-slate-500">2018 - 2022</p>
+                    <p class="mt-2 text-2xl font-bold text-slate-700">8.32 <span class="text-base font-medium">CGPA</span></p>
+                </div>
+                <div class="card p-6 text-center" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-lg font-semibold text-[var(--text-primary)]">12th Grade</h3>
+                    <p class="text-[var(--accent-color)]">Cambridge Public School, Hisar</p>
+                    <p class="text-sm text-slate-500">2017</p>
+                    <p class="mt-2 text-2xl font-bold text-slate-700">82.80<span class="text-base font-medium">%</span></p>
+                </div>
+                <div class="card p-6 text-center" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-lg font-semibold text-[var(--text-primary)]">10th Grade</h3>
+                    <p class="text-[var(--accent-color)]">Shree Kali Devi Vidya Mandir, Hansi</p>
+                    <p class="text-sm text-slate-500">2015</p>
+                    <p class="mt-2 text-2xl font-bold text-slate-700">9.2 <span class="text-base font-medium">CGPA</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-[var(--bg-accent-medium)] text-white rounded-2xl">
+            <div class="max-w-3xl mx-auto text-center" data-aos="zoom-in">
+                <h2 class="text-4xl font-bold mb-4">Let's Connect</h2>
+                <p class="text-lg mb-8 text-slate-200">I'm currently available for new opportunities. Feel free to reach out!</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-8">
+                    <a href="mailto:Jaglan89010@gmail.com" class="inline-flex items-center gap-3 group">
+                        <i data-lucide="mail" class="w-6 h-6 text-slate-300 group-hover:text-white transition-colors"></i>
+                        <span class="text-lg hover:underline">Jaglan89010@gmail.com</span>
+                    </a>
+                    <div class="inline-flex items-center gap-3">
+                        <i data-lucide="phone" class="w-6 h-6 text-slate-300"></i>
+                        <span class="text-lg">8059616670</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12">
+        <div class="container mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <p class="text-slate-600">&copy; 2025 Sahil Jaglan. All Rights Reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4 md:mt-0">
+                <a href="https://www.linkedin.com/in/sjstar/" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)]">
+                    <i data-lucide="linkedin" class="w-6 h-6"></i>
+                </a>
+                <a href="https://github.com/sjstar" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[var(--accent-color)]">
+                    <i data-lucide="github" class="w-6 h-6"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS (Animate on Scroll)
+        AOS.init({
+            duration: 700,
+            once: true,
+            offset: 50,
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Three.js 3D Background Animation
+        let scene, camera, renderer, particles;
+        const canvas = document.getElementById('hero-canvas');
+
+        function init3D() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+
+            // Particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 5000;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.008,
+                color: 0x88BDF2
+            });
+
+            particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+
+            animate();
+        }
+
+        // Mouse move listener
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+
+            // Update particles
+            particles.rotation.y = -0.1 * elapsedTime;
+
+            // Parallax effect
+            const parallaxX = (mouseX / window.innerWidth - 0.5) * 2;
+            const parallaxY = -(mouseY / window.innerHeight - 0.5) * 2;
+            camera.position.x += (parallaxX - camera.position.x) * 0.02;
+            camera.position.y += (parallaxY - camera.position.y) * 0.02;
+            
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(animate);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
+
+        window.addEventListener('resize', onWindowResize, false);
+        
+        init3D();
+
+    </script>
+</body>
+</html>
